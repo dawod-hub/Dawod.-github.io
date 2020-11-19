@@ -1,8 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
- <title>Home Page</title>
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>User dashboard</title>
+
 <!-- Bootstrap core CSS-->
 <?php echo link_tag('assests/vendor/bootstrap/css/bootstrap.min.css'); ?>
 <!-- Custom fonts for this template-->
@@ -15,7 +23,14 @@
   </head>
 
   <body id="page-top">
+
+ <?php include APPPATH.'views/user/includes/header.php';?>
+
     <div id="wrapper">
+
+      <!-- Sidebar -->
+ <?php include APPPATH.'views/user/includes/sidebar.php';?>
+
       <div id="content-wrapper">
 
         <div class="container-fluid">
@@ -23,68 +38,46 @@
           <!-- Breadcrumbs-->
           <ol class="breadcrumb">
             <li class="breadcrumb-item">
-              <a>Home Page</a>
+              <a href="<?php echo site_url('user/Dashboard'); ?>">User</a>
             </li>
-      
+            <li class="breadcrumb-item active">Dashboard</li>
           </ol>
 
-          <!-- Page Content -->
-          <h1>User Management System in CodeIgniter</h1>
-          <hr>
-<div class="row">
-<div class="col-xl-3 col-sm-6 mb-3">
-  &nbsp;
-</div>
-
-  <div class="col-xl-3 col-sm-6 mb-3">
-              <div class="card text-white bg-primary o-hidden h-100">
-                <div class="card-body">
-                  <div class="card-body-icon">
-                    <i class="fas fa-fw fa-users"></i>
-                  </div>
-                  <div class="mr-5">User Login</div>
-                </div>
-               <a class="card-footer text-white clearfix small z-1" href="<?php echo site_url('user/login'); ?>">
-                  <span class="float-left">Click Here</span>
-                  <span class="float-right">
-                    <i class="fas fa-angle-right"></i>
-                  </span>
-                </a>
-              </div>
-            </div> 
-
-
-
-       <div class="col-xl-3 col-sm-6 mb-3">
-              <div class="card text-white bg-warning o-hidden h-100">
-                <div class="card-body">
-                  <div class="card-body-icon">
-                    <i class="fas fa-fw fa-list"></i>
-                  </div>
-                  <div class="mr-5">Admin Login</div>
-                </div>
-               <a class="card-footer text-white clearfix small z-1" href="<?php echo site_url('admin/login'); ?>">
-                  <span class="float-left">Click Here</span>
-                  <span class="float-right">
-                    <i class="fas fa-angle-right"></i>
-                  </span>
-                </a>
-              </div>
+          <!-- Icon Cards-->
+          <div class="row">
+            <div class="col-xl-12 col-sm-6 mb-3">
+   <h3>Welcome Back : <?php echo $profile->firstName;?> <?php echo $profile->lastName;?>  </h3>
             </div>
-
-
-
-</div>
+ 
+  
+          </div>
 
 
 
         </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+   <?php include APPPATH.'views/user/includes/footer.php';?>
 
       </div>
-    </div>
+      <!-- /.content-wrapper -->
 
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+
+
+    <!-- Bootstrap core JavaScript-->
     <script src="<?php echo base_url('assests/vendor/jquery/jquery.min.js'); ?>"></script>
     <script src="<?php echo base_url('assests/vendor/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
+
     <!-- Core plugin JavaScript-->
     <script src="<?php echo base_url('assests/vendor/jquery-easing/jquery.easing.min.js'); ?>"></script>
 

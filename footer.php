@@ -1,6 +1,7 @@
-<footer class="main-footer">
-    <div class="pull-right hidden-xs">
-      <b>All rights reserved</b>
-    </div>
-    <strong>Copyright &copy; 2018 Brought To You By<a href="https://code-projects.org/">Code-Projects</a></strong>
-</footer>
+      <footer class="sticky-footer">
+          <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+              <span>Copyright ©  <a href="https://phpgurukul.com" target="_blank">PHGurukul</a> 2018</span>
+            </div>
+          </div>
+        </footer>

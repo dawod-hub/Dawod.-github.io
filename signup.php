@@ -1,85 +1,114 @@
-<?php include 'includes/session.php'; ?>
-<?php
-  if(isset($_SESSION['user'])){
-    header('location: cart_view.php');
-  }
+<!DOCTYPE html>
+<html lang="en">
 
-  if(isset($_SESSION['captcha'])){
-    $now = time();
-    if($now >= $_SESSION['captcha']){
-      unset($_SESSION['captcha']);
-    }
-  }
+  <head>
+    <title>User - Signup</title>
+<?php echo link_tag('assests/vendor/bootstrap/css/bootstrap.min.css'); ?>
+<?php echo link_tag('assests/vendor/fontawesome-free/css/all.min.css'); ?>
+<?php echo link_tag('assests/css/sb-admin.css'); ?>
 
-?>
-<?php include 'includes/header.php'; ?>
-<body class="hold-transition register-page">
-<div class="register-box">
-  	<?php
-      if(isset($_SESSION['error'])){
-        echo "
-          <div class='callout callout-danger text-center'>
-            <p>".$_SESSION['error']."</p> 
-          </div>
-        ";
-        unset($_SESSION['error']);
-      }
+  </head>
 
-      if(isset($_SESSION['success'])){
-        echo "
-          <div class='callout callout-success text-center'>
-            <p>".$_SESSION['success']."</p> 
-          </div>
-        ";
-        unset($_SESSION['success']);
-      }
-    ?>
-  	<div class="register-box-body">
-    	<p class="login-box-msg">Register a new membership</p>
+  <body class="bg-dark">
 
-    	<form action="register.php" method="POST">
-          <div class="form-group has-feedback">
-            <input type="text" class="form-control" name="firstname" placeholder="Firstname" value="<?php echo (isset($_SESSION['firstname'])) ? $_SESSION['firstname'] : '' ?>" required>
-            <span class="glyphicon glyphicon-user form-control-feedback"></span>
-          </div>
-          <div class="form-group has-feedback">
-            <input type="text" class="form-control" name="lastname" placeholder="Lastname" value="<?php echo (isset($_SESSION['lastname'])) ? $_SESSION['lastname'] : '' ?>"  required>
-            <span class="glyphicon glyphicon-user form-control-feedback"></span>
-          </div>
-      		<div class="form-group has-feedback">
-        		<input type="email" class="form-control" name="email" placeholder="Email" value="<?php echo (isset($_SESSION['email'])) ? $_SESSION['email'] : '' ?>" required>
-        		<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-      		</div>
-          <div class="form-group has-feedback">
-            <input type="password" class="form-control" name="password" placeholder="Password" required>
-            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-          </div>
-          <div class="form-group has-feedback">
-            <input type="password" class="form-control" name="repassword" placeholder="Retype password" required>
-            <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
-          </div>
-          <?php
-            if(!isset($_SESSION['captcha'])){
-              echo '
-                <di class="form-group" style="width:100%;">
-                  <div class="g-recaptcha" data-sitekey="6LevO1IUAAAAAFX5PpmtEoCxwae-I8cCQrbhTfM6"></div>
-                </di>
-              ';
-            }
-          ?>
-          <hr>
-      		<div class="row">
-    			<div class="col-xs-4">
-          			<button type="submit" class="btn btn-primary btn-block btn-flat" name="signup"><i class="fa fa-pencil"></i> Sign Up</button>
-        		</div>
-      		</div>
-    	</form>
-      <br>
-      <a href="login.php">I already have a membership</a><br>
-      <a href="index.php"><i class="fa fa-home"></i> Home</a>
-  	</div>
+    <div class="container">
+      <div class="card card-register mx-auto mt-5">
+        <div class="card-header">Register an Account</div>
+        <div class="card-body">
+<!---- Success Message ---->
+<?php if ($this->session->flashdata('success')) { ?>
+<p style="color:green; font-size:18px;"><?php echo $this->session->flashdata('success'); ?></p>
 </div>
-	
-<?php include 'includes/scripts.php' ?>
-</body>
+
+
+<?php } ?>
+
+<!---- Error Message ---->
+
+<?php if ($this->session->flashdata('error')) { ?>
+<p style="color:red; font-size:18px;"><?php echo $this->session->flashdata('error');?></p>
+
+<?php } ?>  
+
+
+
+   <?php echo form_open('user/signup');?>
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-md-6">
+                  <div class="form-label-group">
+
+<?php echo form_input(['name'=>'firstname','id'=>'firstname','class'=>'form-control','autofocus'=>'autofocus','value'=>set_value('firstname')]);?>
+<?php echo form_label('Enter your first name', 'firstname'); ?>
+<?php echo form_error('firstname',"<div style='color:red'>","</div>");?>
+
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-label-group">
+
+<?php echo form_input(['name'=>'lastname','id'=>'lastname','class'=>'form-control','autofocus'=>'autofocus','value'=>set_value('lastname')]);?>
+<?php echo form_label('Enter your  last name', 'lastname'); ?>
+<?php echo form_error('lastname',"<div style='color:red'>","</div>");?>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label-group">
+
+<?php echo form_input(['name'=>'emailid','id'=>'emailid','class'=>'form-control','autofocus'=>'autofocus','value'=>set_value('emailid')]);?>
+<?php echo form_label('Enter valid email id', 'emailid'); ?>
+<?php echo form_error('emailid',"<div style='color:red'>","</div>");?>
+
+              </div>
+            </div>
+
+     <div class="form-group">
+              <div class="form-label-group">
+
+<?php echo form_input(['name'=>'mobilenumber','id'=>'mobilenumber','class'=>'form-control','autofocus'=>'autofocus','value'=>set_value('mobilenumber')]);?>
+<?php echo form_label('Enter Mobile Number', 'mobilenumber'); ?>
+<?php echo form_error('mobilenumber',"<div style='color:red'>","</div>");?>
+
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-md-6">
+                  <div class="form-label-group">
+<?php echo form_password(['name'=>'password','id'=>'password','class'=>'form-control','autofocus'=>'autofocus','value'=>set_value('password')]);?>
+<?php echo form_label('Password', 'password'); ?>
+<?php echo form_error('password',"<div style='color:red'>","</div>");?>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-label-group">
+<?php echo form_password(['name'=>'confirmpassword','id'=>'confirmpassword','class'=>'form-control','autofocus'=>'autofocus','value'=>set_value('confirmpassword')]);?>
+<?php echo form_label('Confirm Password', 'confirmpassword'); ?>
+<?php echo form_error('confirmpassword',"<div style='color:red'>","</div>");?>
+                  </div>
+                </div>
+              </div>
+            </div>
+ <?php echo form_submit(['name'=>'Register','value'=>'Register','class'=>'btn btn-primary btn-block']); ?>
+
+          </form>
+          <div class="text-center">
+            <a class="d-block small mt-3" href="<?php echo site_url('user/Login'); ?>">Login Page</a>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="<?php echo base_url('assests/vendor/jquery/jquery.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assests/vendor/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assests/vendor/jquery-easing/jquery.easing.min.js'); ?>"></script>
+
+  </body>
+
 </html>
