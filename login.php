@@ -1,59 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>User Login</title>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+<head>
+<title>Food</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="css/font-awesome.css"/>
+<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css"/>
+<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css"/>
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
 
-<?php echo link_tag('assests/vendor/bootstrap/css/bootstrap.min.css'); ?>
-<?php echo link_tag('assests/vendor/fontawesome-free/css/all.min.css'); ?>
-<?php echo link_tag('assests/css/sb-admin.css'); ?>
+<link rel="stylesheet" type="text/css" href="css/style/style1.css"/>
 
-  </head>
+        <script src="js/jquery-3.2.1.js"></script>
+        <script src="js/jquery-ui.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/admin/main.js"></script>    
 
-  <body class="bg-dark">
+<style type="text/css">
+body{
+background-image: url('Images/login.gif');
+background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>
 
-    <div class="container">
-      <div class="card card-login mx-auto mt-5">
-        <div class="card-header">Login</div>
-        <!---- Error Message ---->
+</head>
+<?php include "header.php"; ?>
+<?php include "topmenu.php"; ?>
 
-<?php if ($this->session->flashdata('error')) { ?>
-<p style="color:red; font-size:18px;" align="center"><?php echo $this->session->flashdata('error');?></p>
+<body>
+<div class="container-fluid">    
+<div class="row">     
+<div class="col-xs-12 col-sm-12">
 
-<?php } ?>  
-        <div class="card-body">
-<?php echo form_open('user/login');?>
-            <div class="form-group">
-              <div class="form-label-group">
-<?php echo form_input(['name'=>'emailid','id'=>'emailid','class'=>'form-control','autofocus'=>'autofocus','value'=>set_value('emailid')]);?>
-<?php echo form_label('Enter valid email id', 'emailid'); ?>
-<?php echo form_error('emailid',"<div style='color:red'>","</div>");?>
-              </div>
+<br><br>
+
+<div class="row">
+ 
+    <div class="col-xs-12 col-sm-3"></div>         
+            <div class="col-xs-12 col-sm-9 form-group">
+           
+      <!-- --------------Login Account----------- -->
+ 
+<form method="POST" action="loginaction.php">
+
+              <div class="row">
+                <div class="col-xs-12 col-sm-8 form-group">
+                <h3 style="margin-bottom:5px; color:#0000FF;">
+            <label>Please Login Your Account</label></h3><br><br>
+             <?php
+            if(isset($_GET['error'])==true){
+                if($_GET['error']==1){  
+                echo " <b style='color:red'>*&nbsp; Username or Password is wrong. </b>";       
+                }
+            }
+            ?> 
+               </div>
             </div>
-            <div class="form-group">
-              <div class="form-label-group">
-<?php echo form_password(['name'=>'password','id'=>'password','class'=>'form-control','autofocus'=>'autofocus','value'=>set_value('password')]);?>
-<?php echo form_label('Password', 'password'); ?>
-<?php echo form_error('password',"<div style='color:red'>","</div>");?>
-              </div>
-            </div>
-   
- <?php echo form_submit(['name'=>'login','value'=>'Login','class'=>'btn btn-primary btn-block']); ?>
-<?php echo form_close(); ?>
-          <div class="text-center">
-<a class="d-block small mt-3" href="<?php echo site_url('user/Signup'); ?>">Register an Account</a>
- <a class="d-block small" href="<?php echo site_url('Home'); ?>">Back to Home page</a>
-
-          </div>
-        </div>
+                   
+       <div class="row">
+         <div class="col-xs-12 col-sm-6 form-group">
+          <div class="input-group">
+           <span class="input-group-addon"><i class ="fa fa-user"></i></span>
+            <input type="email" class="form-control" id="username" placeholder="Email Id" name="username" required>
+           </div>
+         </div>
       </div>
-    </div>
+      <br>     
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 form-group">
+           <div class="input-group">
+            <span class="input-group-addon"><i class ="fa fa-unlock-alt"></i></span>
+          <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+         </div>
+        </div>
+      </div>                     
+<div class="row btngrp">
+   <div class="col-xs-12 col-sm-2">
+    <a href="register.php"><button type="button" name="submit" class="btn btn-warning btn-md pull-left">Sign Up</button></a>   
+   </div>
+   <div class="col-xs-12 col-sm-2">
+    <a href="fgtpwd.php"><button type="button" name="submit" class="btn btn-danger btn-md pull-left">Forgot Password</button></a>   
+   </div>
+          
+   <div class="col-xs-12 col-sm-2">
+     <button type="submit" class="btn btn-success btn-md pull-right" id="loginbtn"><span>Login</span></button>    
+   </div>
+ </div>      
+        </form>  
+     </div>
+  
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-   <script src="<?php echo base_url('assests/vendor/jquery/jquery.min.js'); ?>"></script>
-    <script src="<?php echo base_url('assests/vendor/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
-    <script src="<?php echo base_url('assests/vendor/jquery-easing/jquery.easing.min.js'); ?>"></script>
+</div>       
 
-  </body>
 
+
+
+
+
+
+</div>
+</div>
+</div>
+
+
+<?php include "footer.php" ?>
+</body>
 </html>
+    
+
+
+
+

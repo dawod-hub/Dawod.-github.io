@@ -1,6 +1,9 @@
-<?php
-	session_start();
-	session_destroy();
+    <?php
+    session_start();
+    if(session_destroy())
+    {
+    header("Location: index.php");
+    }
+    ?>
 
-	header('location: index.php');
-?>
+   

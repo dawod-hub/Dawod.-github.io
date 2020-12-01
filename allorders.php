@@ -32,7 +32,7 @@ background-image: url('Images/b3.jpg');
 
 </head>
 <?php include "header.php"; ?>
-<?php include "usermenu.php"; ?>
+<?php include "adminmenu.php"; ?>
 <?php include "connection.php"; ?>
 <body>
 
@@ -42,11 +42,12 @@ background-image: url('Images/b3.jpg');
 
 
 
-<div id="viewemps">
+<div id="vieworders">
+   
   <div id="row">
     <div class="table-responsive">
       <div class="panel panel-primary filterable">
-        <div class="panel-heading"><center><h3 class="panel-title">Cart Details</h3></center>
+        <div class="panel-heading"><center><h3 class="panel-title">Order Details</h3></center>
           <div class="pull-right">
           <button class="btn btn-default btn-xs btn-filter"><strong><span class="glyphicon glyphicon-filter"></span> Filter</strong></button>
           </div>
@@ -58,12 +59,12 @@ background-image: url('Images/b3.jpg');
           <thead>
           <tr class="filters">
           <th>Id</th>
-          <th><input type="text" class="form-control" placeholder="Branch" disabled></th>
+          <th><input type="text" class="form-control" placeholder="Customer" disabled></th>
           <th><input type="text" class="form-control" placeholder="Category" disabled></th>
           <th><input type="text" class="form-control" placeholder="Item" disabled></th>
-          <th><input type="text" class="form-control" placeholder="Price" disabled></th>
-          <th><input type="text" class="form-control" placeholder="Book" disabled></th>
-          <th><input type="text" class="form-control" placeholder="View & Remove" disabled></th>
+          <th><input type="text" class="form-control" placeholder="Status" disabled></th>
+          <th><input type="text" class="form-control" placeholder="Order Date" disabled></th>
+          <th><input type="text" class="form-control" placeholder="View" disabled></th>
 
 
           </tr>
@@ -79,7 +80,7 @@ background-image: url('Images/b3.jpg');
 
     }
 
-    $sql = "SELECT k.id, b.branchname, b.brancharea, b.branchaddress, b.branchcity, b.branchpostal, b.branchdesc, x.countryname, s.statename, c.categoryname, i.itemname, i.itemprice, k.cartdate FROM assignitems a, branch b, category c, items i, register r, country x, state s, cart k WHERE k.aid=a.id AND k.usermailid=r.emailid AND a.branchid=b.id AND a.catid=c.id AND a.itemid=i.id AND b.branchcountry=x.id AND b.branchstate=s.id AND k.usermailid='$email' ORDER BY k.cartdate DESC ";
+    $sql = "SELECT o.id, o.quantity, o.status, o.holdername, o.cardtype, o.orderdate, b.branchname, b.brancharea, b.branchimage, b.branchaddress, b.branchcity, b.branchpostal, b.branchdesc, x.countryname, s.statename, c.categoryname, i.itemname, i.itemprice, r.fullname, k.usermailid FROM ordercart o, cart k, assignitems a, category c, items i, branch b, country x, state s, register r WHERE o.kid=k.id AND k.aid=a.id AND a.branchid=b.id AND a.catid=c.id AND a.itemid=i.id AND b.branchcountry=x.id AND b.branchstate=s.id AND k.usermailid=r.emailid ORDER BY o.orderdate DESC ";
 
     if($result = mysqli_query($db, $sql)){
 
@@ -91,28 +92,25 @@ $dobb = date("d-M-Y", strtotime($dob));
 
                 echo "<tr>";
                     echo "<td>" . $row['id'] . "</td>";
-                    echo "<td>" . $row['branchname'] . "</td>";
+                    echo "<td>" . $row['fullname'] . " - " . $row['usermailid'] . "</td>";
                     echo "<td>" . $row['categoryname'] . "</td>";
                     echo "<td>" . $row['itemname'] . "</td>";
-                    echo "<td>" . $row['itemprice'] . "</td>";
+                    echo "<td>" . $row['status'] . "</td>";
+                    echo "<td>" . $row['orderdate'] . "</td>";
 ?>
-<td>
-   <a href="bookcart.php?kid=<?php echo $row['id'] ?>" class="btn btn-info btn-sm">Book</a>
-</td>
-<td>
+<td style="width:6%">
    <button type="button" class="viewmodal btn btn-warning btn-sm" data-toggle="modal">View</button>
-   <a href="removecart.php?id=<?php echo $row['id'] ?>" class="btn btn-danger btn-sm">Remove</a>
 </td>
-
-<td style="display:none"><?php
- echo '<img src="Images/'.$row['image'].'" height="50px"; width="100px">';
- ?></td>
 <?php
+                    echo "<td style='display:none'>" . $row['itemprice'] . "</td>";
+                    echo "<td style='display:none'>" . $row['quantity'] . "</td>";
+                    echo "<td style='display:none'>" . $row['itemprice']*$row['quantity'] . "</td>";
+                    echo "<td style='display:none'>" . $row['branchname'] . "</td>";
                     
 
 echo "<td style='display:none'>" . $row['branchaddress' ] . ",&nbsp;" . $row['brancharea' ] . ",&nbsp;" . $row['branchcity' ] . ",<br>" . $row['statename' ] .",&nbsp;" . $row['countryname' ] . ",<br>" . $row['branchpostal' ] .   "</td>";
 
-                    echo "<td style='display:none'>" . $row['cartdate' ] . "</td>";
+                    echo "<td style='display:none'>" . $row['cardtype' ] . "</td>";
                     
 
                 echo "</tr>";
@@ -120,7 +118,7 @@ echo "<td style='display:none'>" . $row['branchaddress' ] . ",&nbsp;" . $row['br
           
             mysqli_free_result($result);
         } else{
-            echo "<center>Records not available.</center>";
+            echo "<center><strong style='color:red'>Records not available.</strong></center>";
         }
     } else{
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($db);
@@ -153,12 +151,8 @@ echo "<td style='display:none'>" . $row['branchaddress' ] . ",&nbsp;" . $row['br
                     <span id="demomsg"><br></span>
 
                     <div class="row">
-                        <div class="col-xs-4 text-info"><strong>Branch Name:</strong></div>
-                        <div class="col-xs-8 text-warning"><span id="bn"></span></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4 text-info"><strong>Branch Address:</strong></div>
-                        <div class="col-xs-8 text-warning"><span id="ba"></span></div>
+                        <div class="col-xs-4 text-info"><strong>Customer:</strong></div>
+                        <div class="col-xs-8 text-warning"><span id="cust"></span></div>
                     </div>
                     <div class="row">
                         <div class="col-xs-4 text-info"><strong>Category:</strong></div>
@@ -173,8 +167,32 @@ echo "<td style='display:none'>" . $row['branchaddress' ] . ",&nbsp;" . $row['br
                         <div class="col-xs-8 text-warning"><span id="bp"></span></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-4 text-info"><strong>Assign Date:</strong></div>
-                        <div class="col-xs-8 text-warning"><span id="bad"></span></div>
+                        <div class="col-xs-4 text-info"><strong>Quantity:</strong></div>
+                        <div class="col-xs-8 text-warning"><span id="qnt"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 text-info"><strong>Total:</strong></div>
+                        <div class="col-xs-8 text-warning"><span id="tot"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 text-info"><strong>Payment Type:</strong></div>
+                        <div class="col-xs-8 text-warning"><span id="pt"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 text-info"><strong>Status:</strong></div>
+                        <div class="col-xs-8 text-warning"><span id="sts"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 text-info"><strong>Order Date:</strong></div>
+                        <div class="col-xs-8 text-warning"><span id="odt"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 text-info"><strong>Branch Name:</strong></div>
+                        <div class="col-xs-8 text-warning"><span id="bn"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 text-info"><strong>Branch Address:</strong></div>
+                        <div class="col-xs-8 text-warning"><span id="ba"></span></div>
                     </div>
                   
                     <br>
@@ -201,12 +219,17 @@ echo "<td style='display:none'>" . $row['branchaddress' ] . ",&nbsp;" . $row['br
 
 $('.viewmodal').click(function () {
     $('#id').text($(this).closest("tr").find('td:eq(0)').text());
-    $('#bn').text($(this).closest("tr").find('td:eq(1)').text());
-    $('#ba').text($(this).closest("tr").find('td:eq(8)').text());
+    $('#cust').text($(this).closest("tr").find('td:eq(1)').text());
     $('#bc').text($(this).closest("tr").find('td:eq(2)').text());
     $('#bi').text($(this).closest("tr").find('td:eq(3)').text());
-    $('#bp').text($(this).closest("tr").find('td:eq(4)').text());
-    $('#bad').text($(this).closest("tr").find('td:eq(9)').text());
+    $('#bp').text($(this).closest("tr").find('td:eq(7)').text());
+    $('#qnt').text($(this).closest("tr").find('td:eq(8)').text());
+    $('#tot').text($(this).closest("tr").find('td:eq(9)').text());
+    $('#pt').text($(this).closest("tr").find('td:eq(12)').text());
+    $('#sts').text($(this).closest("tr").find('td:eq(4)').text());
+    $('#odt').text($(this).closest("tr").find('td:eq(5)').text());
+    $('#bn').text($(this).closest("tr").find('td:eq(10)').text());
+    $('#ba').text($(this).closest("tr").find('td:eq(11)').text());
 
     $('#myModal').modal('show');
 

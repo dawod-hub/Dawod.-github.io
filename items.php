@@ -25,15 +25,12 @@ and open the template in the editor.
 body{
 background-image: url('Images/bg.jpg');
 }
+.zoom:hover {
+  -ms-transform: scale(1.2); /* IE 9 */
+  -webkit-transform: scale(1.2); /* Safari 3-8 */
+  transform: scale(1.2); 
+}
 </style>
-<script type="text/javascript">
-$(document).ready(function(){
-$('#date').datepicker({
-            /*format: "dd/mm/yyyy",*/
-          dateFormat: 'dd-M-yy',
-        }); 
-});
-</script> 
 
 <script type="text/javascript">
 function readURL(input) {
@@ -55,12 +52,12 @@ function readURL(input) {
 <script>
 $(document).ready(function(){
     $("#add").click(function(){
-               $("#addcategory").show();
-               $("#viewcategory").hide();
+               $("#additems").show();
+               $("#viewitems").hide();
       });
     $("#view").click(function(){
-               $("#addcategory").hide();
-               $("#viewcategory").show();
+               $("#additems").hide();
+               $("#viewitems").show();
       });
 });
 </script>
@@ -79,23 +76,23 @@ $(document).ready(function(){
 <div class="row">
 <div class="col-xs-12 col-sm-12 form-group">
    <center>Please select : &nbsp;&nbsp;&nbsp;
-<label class="radio-inline"><input type="radio" id="add" name="optradio"><strong class="text-info">Add Category</strong></label>
-<label class="radio-inline"><input type="radio" id="view" name="optradio"><strong class="text-danger">View Category</strong></label>
+<label class="radio-inline"><input type="radio" id="add" name="optradio"><strong class="text-info">Add Items</strong></label>
+<label class="radio-inline"><input type="radio" id="view" name="optradio"><strong class="text-danger">View Items</strong></label>
    </center> 
       </div>
     </div>
- <div id="addcategory">
-<center><h3><strong>Category</strong></h3>
+ <div id="additems">
+<center><h3><strong>Items</strong></h3>
 <?php
             if(isset($_GET['error'])==true){
                 if($_GET['error']==1){ 
-                echo "<b style='color:red'>*&nbsp; Category alreary exist. </b>";       
+                echo "<b style='color:red'>*&nbsp; Item alreary exist. </b>";       
                 }
                 elseif($_GET['error']==2){
-                echo "<b style='color:red'>*&nbsp; Category details is not successfully added . </b>";
+                echo "<b style='color:red'>*&nbsp; Item details is not successfully added . </b>";
                 }
                 elseif($_GET['error']==3){  
-                echo "<b style='color:#3333ff'>*&nbsp; Category details is successfully added. </b>";       
+                echo "<b style='color:#3333ff'>*&nbsp; Item details is successfully added. </b>";       
                 }
             }
             ?>
@@ -104,24 +101,47 @@ $(document).ready(function(){
   <div class="col-xs-12 col-sm-2"></div>
   <div class="col-xs-12 col-sm-8">
 <br><br>         
-<form method="POST" action="categoryaction.php" enctype="multipart/form-data" >
+<form method="POST" action="itemaction.php" enctype="multipart/form-data" >
 <div class="row">
+<?php     
+$sql=mysqli_query($db,"SELECT * FROM category ")
+?>
+  <div class="col-xs-12 col-sm-6 form-group">
+     <div class="input-group">
+     <span class="input-group-addon"><i class ="fa fa-lemon-o"></i></span>
+   <select class="form-control" id="categoryid" name="categoryid" required>
+  <option value="">Please Select Category</option> 
+     <?php while ($row=mysqli_fetch_array($sql)) { ?>
+  <option value=<?php echo $row['id'];?>><?php echo $row['categoryname']; ?></option>
+<?php } ?>
+   </select>    
+    </div>
+ </div>
       <div class="col-xs-12 col-sm-6 form-group">
       <div class="input-group">
-      <span class="input-group-addon"><i class ="fa fa-home"></i></span>
-      <input type="text" class="form-control" id="categoryname" placeholder="Category Name" name="categoryname" required>
+      <span class="input-group-addon"><i class ="fa fa-lemon-o"></i></span>
+      <input type="text" class="form-control" id="itemname" placeholder="Item Name" name="itemname" required>
       </div>
     </div>
+  </div>
+  <div class="row">  
     <div class="col-xs-12 col-sm-6 form-group">
       <div class="input-group">
         <span class="input-group-addon"><i class ="fa fa-image"></i></span>
           <input type="file" name="file" class="form-control" accept=".png, .jpg, .jpeg" placeholder="Image" onchange="readURL(this);" required>
       </div>
-    </div> 
+    </div>  
+    <div class="col-xs-12 col-sm-6 form-group">
+      <div class="input-group">
+      <span class="input-group-addon"><i class ="fa fa-rupee"></i></span>
+      <input type="text" class="form-control" id="itemprice" placeholder="Price" name="itemprice" maxlength="5" title="Price enter digits only"
+        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+      </div>
+    </div>
 </div> 
 <div class="row">
   <div class="col-xs-12 col-sm-12 form-group">
-    <textarea class="form-control" rows="2" id="categorydesc" name="categorydesc" placeholder="Describe about the category details in 4000 words." required></textarea> 
+    <textarea class="form-control" rows="2" id="itemdesc" name="itemdesc" placeholder="Describe about the item details in 4000 words." required></textarea> 
   </div> 
 </div>       
 <div class="row btngrp">
@@ -144,17 +164,17 @@ $(document).ready(function(){
 </div>
   
 
-<div id="viewcategory" style="display:none">
+<div id="viewitems" style="display:none">
 
 <?php
-
+include "connection.php";
     if($db === false){
 
         die("ERROR: Could not connect. " . mysqli_connect_error());
 
     }
 
-    $sql = "SELECT * FROM category ";
+    $sql = "SELECT i.id, i.itemname, i.itemimage, i.itemprice, i.itemdesc, c.categoryname FROM category c, items i WHERE c.id=i.categoryid ";
 
     if($result = mysqli_query($db, $sql)){
 
@@ -175,25 +195,27 @@ echo "<tr>";
                     echo "<td style='display:none'>" . $row['id'] . "</td>";
 ?><td>
 
-<?php echo '<img src="Category/'.$row['categoryimage'].'" height="120px"; width="200px">'; ?>
+<?php echo '<img src="Items/'.$row['itemimage'].'" height="120px"; width="200px" class="zoom">'; ?>
 </td>
 <br>
 <?php
 echo "<tr>";
                     echo "<td style='display:none'>" . $row['id'] . "</td>";
                     echo "<td style='display:none'>" . $row['categoryname'] . "</td>";
-                    echo "<td style='display:none'>" . $row['categorydesc'] . "</td>";
+                    echo "<td style='display:none'>" . $row['itemname'] . "</td>";
+                    echo "<td style='display:none'>" . $row['itemprice'] . "</td>";
+                    echo "<td style='display:none'>" . $row['itemdesc'] . "</td>";
 
 ?>
 <td>
 <br>
-<span>Name: </span><strong class="viewmodal" data-toggle="modal"><?php echo $row['categoryname']; ?></strong><br>
+<span>Name: </span><strong class="viewmodal" data-toggle="modal"><?php echo $row['itemname']; ?></strong><br>
 
 </td>
 </tr>
 <tr>
 <td><br>
-   <center><a href="categoryitems.php?id=<?php echo $row['id'] ?>" class="btn btn-info btn-sm">Go To</a></center>
+   <center><a href="itemupdate.php?id=<?php echo $row['id'] ?>" class="btn btn-warning btn-sm">Update</a></center>
 </td>
 </tr>
 
@@ -209,7 +231,6 @@ echo "<tr>";
 <?php           
 
             }
-            echo "</table>";
             // Free result set
             mysqli_free_result($result);
 
@@ -246,12 +267,20 @@ echo "<tr>";
                     <span id="demomsg"><br></span>
 
                     <div class="row">
-                        <div class="col-xs-4 text-info"><strong>Category Name:</strong></div>
-                        <div class="col-xs-8 text-warning"><span id="cn"></span></div>
+                        <div class="col-xs-4 text-info"><strong>Item Name:</strong></div>
+                        <div class="col-xs-8 text-warning"><span id="in"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 text-info"><strong>Category:</strong></div>
+                        <div class="col-xs-8 text-warning"><span id="ic"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 text-info"><strong>Price:</strong></div>
+                        <div class="col-xs-8 text-warning"><span id="ip"></span></div>
                     </div>
                     <div class="row">
                         <div class="col-xs-4 text-info"><strong>Description:</strong></div>
-                        <div class="col-xs-8 text-warning"><span id="cdesc"></span></div>
+                        <div class="col-xs-8 text-warning"><span id="idesc"></span></div>
                     </div>
                   
                     <br>
@@ -280,8 +309,10 @@ echo "<tr>";
 
 $('.viewmodal').click(function () {
     $('#id').text($(this).closest("tr").find('td:eq(0)').text());
-    $('#cn').text($(this).closest("tr").find('td:eq(1)').text());
-    $('#cdesc').text($(this).closest("tr").find('td:eq(2)').text());
+    $('#in').text($(this).closest("tr").find('td:eq(2)').text());
+    $('#ic').text($(this).closest("tr").find('td:eq(1)').text());
+    $('#ip').text($(this).closest("tr").find('td:eq(3)').text());
+    $('#idesc').text($(this).closest("tr").find('td:eq(4)').text());
 
 
     $('#myModal').modal('show');
